@@ -9,7 +9,7 @@
         "duration": 68053998,
         "conditionResults": [
           { "condition": "[STATUS] == 200", "success": true },
-          { "condition": "[RESPONSE_TIME] \u003c 500", "success": true }
+          { "condition": "[RESPONSE_TIME] 500", "success": true }
         ],
         "success": true,
         "timestamp": "2023-11-10T11:33:49.523233409Z"
@@ -20,7 +20,7 @@
         "duration": 51742575,
         "conditionResults": [
           { "condition": "[STATUS] == 200", "success": true },
-          { "condition": "[RESPONSE_TIME] \u003c 500", "success": true }
+          { "condition": "[RESPONSE_TIME] 500", "success": true }
         ],
         "success": true,
         "timestamp": "2023-11-10T11:34:55.471397756Z"
@@ -31,7 +31,7 @@
         "duration": 52256811,
         "conditionResults": [
           { "condition": "[STATUS] == 200", "success": true },
-          { "condition": "[RESPONSE_TIME] \u003c 500", "success": true }
+          { "condition": "[RESPONSE_TIME] 500", "success": true }
         ],
         "success": true,
         "timestamp": "2023-11-10T11:36:05.465999106Z"
@@ -48,7 +48,7 @@
         "duration": 131461823,
         "conditionResults": [
           { "condition": "[STATUS] == 200", "success": true },
-          { "condition": "[RESPONSE_TIME] \u003c 500", "success": true }
+          { "condition": "[RESPONSE_TIME] 500", "success": true }
         ],
         "success": true,
         "timestamp": "2023-11-10T11:33:49.655064634Z"
@@ -59,7 +59,7 @@
         "duration": 123535226,
         "conditionResults": [
           { "condition": "[STATUS] == 200", "success": true },
-          { "condition": "[RESPONSE_TIME] \u003c 500", "success": true }
+          { "condition": "[RESPONSE_TIME] 500", "success": true }
         ],
         "success": true,
         "timestamp": "2023-11-10T11:34:55.595285218Z"
@@ -70,7 +70,7 @@
         "duration": 136001386,
         "conditionResults": [
           { "condition": "[STATUS] == 200", "success": true },
-          { "condition": "[RESPONSE_TIME] \u003c 500", "success": true }
+          { "condition": "[RESPONSE_TIME] 500", "success": true }
         ],
         "success": true,
         "timestamp": "2023-11-10T11:36:05.60236206Z"
