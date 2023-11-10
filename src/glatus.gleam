@@ -1,6 +1,16 @@
 import gleam/dynamic.{type DecodeErrors, type Decoder, type Dynamic}
 import gleam/option
+import gleam/int
+import gleam/bool
+import gleam/json
 import gleam/result
+import gleam/http/request.{type Request}
+import gleam/http/response.{type Response}
+
+pub type Error {
+  UnexpectedResonse(status: Int, body: String)
+  UnexpectedPayload(json.DecodeError)
+}
 
 pub type Endpoint {
   Endpoint(
@@ -38,6 +48,33 @@ pub type StatusEventType {
   Unhealthly
 }
 
+/// Create a request to fetch a list of all `Endpoint`s from a Gatus instance.
+///
+/// Send this request with a HTTP client such as `gleam_httpc` or `gleam_fetch`
+/// and handle the result with the `handle_statuses_response` function.
+///
+pub fn statuses_request(host: String, page page: Int) -> Request(String) {
+  request.new()
+  |> request.set_host(host)
+  |> request.set_path("/api/v1/endpoints/statuses")
+  |> request.set_query([#("page", int.to_string(page))])
+}
+
+pub fn handle_statuses_response(
+  response: Response(String),
+) -> Result(List(Endpoint), Error) {
+  use <- bool.guard(
+    when: response.status != 200,
+    return: Error(UnexpectedResonse(response.status, response.body)),
+  )
+
+  response.body
+  |> json.decode(decode_endpoints)
+  |> result.map_error(UnexpectedPayload)
+}
+
+/// Decode a list of `Endpoint`s from `Dynamic`.
+///
 pub fn decode_endpoints(data: Dynamic) -> Result(List(Endpoint), DecodeErrors) {
   dynamic.list(decode_endpoint)(data)
 }

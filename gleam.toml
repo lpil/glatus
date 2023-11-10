@@ -1,7 +1,7 @@
 name = "glatus"
 version = "1.0.0"
 
-description = "Bindings to the API of the Gatus health check tool"
+description = "Gleam bindings to the API of the Gatus health check tool"
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "lpil", repo = "glatus" }
 links = [{ title = "Website", href = "https://gleam.run" }]
@@ -14,3 +14,4 @@ gleam_http = "~> 3.5"
 [dev-dependencies]
 gleeunit = "~> 1.0"
 simplifile = "~> 0.2"
+gleam_httpc = "~> 2.1"

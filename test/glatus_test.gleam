@@ -1,11 +1,20 @@
 import simplifile
-import gleam/json
 import glatus.{ConditionResult, Endpoint, StatusResult}
 import gleeunit
+import gleam/json
+import gleam/httpc
 import gleeunit/should
 
 pub fn main() {
   gleeunit.main()
+}
+
+pub fn statuses_test() {
+  let assert Ok(response) =
+    "status.lpil.uk"
+    |> glatus.statuses_request(page: 1)
+    |> httpc.send
+  let assert Ok(_) = glatus.handle_statuses_response(response)
 }
 
 pub fn decode_endpoints_test() {
