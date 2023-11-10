@@ -1,22 +1,28 @@
 # glatus
 
+Gleam bindings to the API of the Gatus health check tool.
+
 [![Package Version](https://img.shields.io/hexpm/v/glatus)](https://hex.pm/packages/glatus)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glatus/)
-
-## Quick start
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-```
-
-## Installation
-
-If available on Hex this package can be added to your Gleam project:
 
 ```sh
 gleam add glatus
 ```
+```gleam
+import glatus
+import gleam/httpc
 
-and its documentation can be found at <https://hexdocs.pm/glatus>.
+pub fn main() {
+  // Build a request
+  let request =
+    glatus.statuses_request(host: "status.lpil.uk", page: 1)
+
+  // Send the request with a HTTP client
+  let assert Ok(response) = httpc.send(request)
+
+  // Decode the response
+  let information = glatus.handle_statuses_response(response)
+}
+```
+
+Documentation can be found at <https://hexdocs.pm/glatus>.
