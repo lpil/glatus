@@ -53,13 +53,15 @@ pub type StatusEventType {
 /// Send this request with a HTTP client such as `gleam_httpc` or `gleam_fetch`
 /// and handle the result with the `handle_statuses_response` function.
 ///
-pub fn statuses_request(host: String, page page: Int) -> Request(String) {
+pub fn statuses_request(host host: String, page page: Int) -> Request(String) {
   request.new()
   |> request.set_host(host)
   |> request.set_path("/api/v1/endpoints/statuses")
   |> request.set_query([#("page", int.to_string(page))])
 }
 
+/// Check and decode a response from the `/api/v1/endpoints/statuses` endpoint.
+///
 pub fn handle_statuses_response(
   response: Response(String),
 ) -> Result(List(Endpoint), Error) {
@@ -70,6 +72,37 @@ pub fn handle_statuses_response(
 
   response.body
   |> json.decode(decode_endpoints)
+  |> result.map_error(UnexpectedPayload)
+}
+
+/// Create a request to fetch the status information from a specific `Endpoint`.
+///
+/// Send this request with a HTTP client such as `gleam_httpc` or `gleam_fetch`
+/// and handle the result with the `handle_endpoint_response` function.
+///
+pub fn endpoint_request(
+  host host: String,
+  endpoint_key key: String,
+  page page: Int,
+) -> Request(String) {
+  request.new()
+  |> request.set_host(host)
+  |> request.set_path("/api/v1/endpoints/" <> key <> "/statuses")
+  |> request.set_query([#("page", int.to_string(page))])
+}
+
+/// Check and decode a response from the `/api/v1/endpoints/statuses` endpoint.
+///
+pub fn handle_endpoint_response(
+  response: Response(String),
+) -> Result(Endpoint, Error) {
+  use <- bool.guard(
+    when: response.status != 200,
+    return: Error(UnexpectedResonse(response.status, response.body)),
+  )
+
+  response.body
+  |> json.decode(decode_endpoint)
   |> result.map_error(UnexpectedPayload)
 }
 
@@ -124,9 +157,9 @@ fn decode_status_event_type(
 ) -> Result(StatusEventType, DecodeErrors) {
   use event <- result.try(dynamic.string(data))
   case event {
-    "start" -> Ok(Start)
-    "healthy" -> Ok(Healthly)
-    "unhealthy" -> Ok(Unhealthly)
+    "START" -> Ok(Start)
+    "HEALTHY" -> Ok(Healthly)
+    "UNHEALTHY" -> Ok(Unhealthly)
     _ ->
       Error([
         dynamic.DecodeError(

@@ -17,6 +17,14 @@ pub fn statuses_test() {
   let assert Ok(_) = glatus.handle_statuses_response(response)
 }
 
+pub fn gleam_website_endpoint_test() {
+  let assert Ok(response) =
+    "status.lpil.uk"
+    |> glatus.endpoint_request(endpoint_key: "_gleam-run", page: 1)
+    |> httpc.send
+  let assert Ok(_) = glatus.handle_endpoint_response(response)
+}
+
 pub fn decode_endpoints_test() {
   let assert Ok(json) = simplifile.read("test/statuses.json")
   let assert Ok(data) = json.decode(json, glatus.decode_endpoints)
