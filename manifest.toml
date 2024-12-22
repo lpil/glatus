@@ -2,19 +2,20 @@
 # You typically do not need to edit this file
 
 packages = [
-  { name = "gleam_http", version = "3.5.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_http", source = "hex", outer_checksum = "0B09AAE8EB547C4F2F2D3F8917A0A4D2EF75DFF0232389332BAFE19DBBFDB92B" },
-  { name = "gleam_httpc", version = "2.1.1", build_tools = ["gleam"], requirements = ["gleam_stdlib", "gleam_http"], otp_app = "gleam_httpc", source = "hex", outer_checksum = "06AC1CA52C9BAA66C9D5C0303B2BF34E39AA1546BB96AEE496E4B06D513AB8C7" },
-  { name = "gleam_json", version = "0.7.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "thoas"], otp_app = "gleam_json", source = "hex", outer_checksum = "CB405BD93A8828BCD870463DE29375E7B2D252D9D124C109E5B618AAC00B86FC" },
-  { name = "gleam_stdlib", version = "0.32.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "07D64C26D014CF570F8ACADCE602761EA2E74C842D26F2FD49B0D61973D9966F" },
-  { name = "gleeunit", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "D3682ED8C5F9CAE1C928F2506DE91625588CC752495988CBE0F5653A42A6F334" },
-  { name = "simplifile", version = "0.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "856DD0CD5FEEB464FB32522F6C9C51F5DE1398799C17028D3645EDC4B732E7DB" },
-  { name = "thoas", version = "0.4.1", build_tools = ["rebar3"], requirements = [], otp_app = "thoas", source = "hex", outer_checksum = "4918D50026C073C4AB1388437132C77A6F6F7C8AC43C60C13758CC0ADCE2134E" },
+  { name = "filepath", version = "1.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "67A6D15FB39EEB69DD31F8C145BB5A421790581BD6AA14B33D64D5A55DBD6587" },
+  { name = "gleam_erlang", version = "0.33.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_erlang", source = "hex", outer_checksum = "A1D26B80F01901B59AABEE3475DD4C18D27D58FA5C897D922FCB9B099749C064" },
+  { name = "gleam_http", version = "3.7.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_http", source = "hex", outer_checksum = "8A70D2F70BB7CFEB5DF048A2183FFBA91AF6D4CF5798504841744A16999E33D2" },
+  { name = "gleam_httpc", version = "4.0.0", build_tools = ["gleam"], requirements = ["gleam_erlang", "gleam_http", "gleam_stdlib"], otp_app = "gleam_httpc", source = "hex", outer_checksum = "76FEEC99473E568EBA34336A37CF3D54629ACE77712950DC9BB097B5FD664664" },
+  { name = "gleam_json", version = "2.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_json", source = "hex", outer_checksum = "093214EB186A88D301795A94F0A8128C2E24CF1423997ED31A6C6CC67FC3E1A1" },
+  { name = "gleam_stdlib", version = "0.51.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "14AFA8D3DDD7045203D422715DBB822D1725992A31DF35A08D97389014B74B68" },
+  { name = "gleeunit", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "F7A7228925D3EE7D0813C922E062BFD6D7E9310F0BEE585D3A42F3307E3CFD13" },
+  { name = "simplifile", version = "2.2.0", build_tools = ["gleam"], requirements = ["filepath", "gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "0DFABEF7DC7A9E2FF4BB27B108034E60C81BEBFCB7AB816B9E7E18ED4503ACD8" },
 ]
 
 [requirements]
-gleam_http = { version = "~> 3.5" }
-gleam_httpc = { version = "~> 2.1" }
-gleam_json = { version = "~> 0.7" }
-gleam_stdlib = { version = "~> 0.32" }
-gleeunit = { version = "~> 1.0" }
-simplifile = { version = "~> 0.2" }
+gleam_http = { version = ">= 3.0.0 and < 4.0.0" }
+gleam_httpc = { version = ">= 4.0.0 and < 5.0.0" }
+gleam_json = { version = ">= 1.0.0 and < 3.0.0" }
+gleam_stdlib = { version = ">= 0.51.0 and < 2.0.0" }
+gleeunit = { version = ">= 1.2.0 and < 2.0.0" }
+simplifile = { version = ">= 2.2.0 and < 3.0.0" }

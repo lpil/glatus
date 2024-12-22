@@ -1,11 +1,10 @@
-import gleam/dynamic.{type DecodeErrors, type Decoder, type Dynamic}
-import gleam/option
-import gleam/int
 import gleam/bool
-import gleam/json
-import gleam/result
+import gleam/dynamic/decode.{type Decoder}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
+import gleam/int
+import gleam/json
+import gleam/result
 
 pub type Error {
   UnexpectedResonse(status: Int, body: String)
@@ -71,7 +70,7 @@ pub fn handle_statuses_response(
   )
 
   response.body
-  |> json.decode(decode_endpoints)
+  |> json.parse(endpoints_decoder())
   |> result.map_error(UnexpectedPayload)
 }
 
@@ -102,82 +101,68 @@ pub fn handle_endpoint_response(
   )
 
   response.body
-  |> json.decode(decode_endpoint)
+  |> json.parse(endpoint_decoder())
   |> result.map_error(UnexpectedPayload)
 }
 
-/// Decode a list of `Endpoint`s from `Dynamic`.
+/// Decode a list of `Endpoint`s.
 ///
-pub fn decode_endpoints(data: Dynamic) -> Result(List(Endpoint), DecodeErrors) {
-  dynamic.list(decode_endpoint)(data)
+pub fn endpoints_decoder() -> Decoder(List(Endpoint)) {
+  decode.list(endpoint_decoder())
 }
 
-pub fn decode_endpoint(data: Dynamic) -> Result(Endpoint, DecodeErrors) {
-  dynamic.decode4(
-    Endpoint,
-    dynamic.field("name", dynamic.string),
-    dynamic.field("key", dynamic.string),
-    dynamic.field("results", dynamic.list(decode_status_result)),
-    optional_field_of_list("events", decode_status_event),
-  )(data)
+pub fn endpoint_decoder() -> Decoder(Endpoint) {
+  use name <- decode.field("name", decode.string)
+  use key <- decode.field("key", decode.string)
+  use results <- decode.field("results", decode.list(decode_status_result()))
+  use events <- decode.optional_field(
+    "events",
+    [],
+    decode.list(status_events_decoder()),
+  )
+  decode.success(Endpoint(name:, key:, results:, events:))
 }
 
-fn decode_status_result(data: Dynamic) -> Result(StatusResult, DecodeErrors) {
-  dynamic.decode6(
-    StatusResult,
-    dynamic.field("status", dynamic.int),
-    dynamic.field("hostname", dynamic.string),
-    dynamic.field("duration", dynamic.int),
-    dynamic.field("conditionResults", dynamic.list(decode_condition_result)),
-    dynamic.field("success", dynamic.bool),
-    dynamic.field("timestamp", dynamic.string),
-  )(data)
+fn decode_status_result() -> Decoder(StatusResult) {
+  use status <- decode.field("status", decode.int)
+  use hostname <- decode.field("hostname", decode.string)
+  use duration <- decode.field("duration", decode.int)
+  use condition_results <- decode.field(
+    "conditionResults",
+    decode.list(condition_results_decoder()),
+  )
+  use success <- decode.field("success", decode.bool)
+  use timestamp <- decode.field("timestamp", decode.string)
+  decode.success(StatusResult(
+    status:,
+    hostname:,
+    duration:,
+    condition_results:,
+    success:,
+    timestamp:,
+  ))
 }
 
-fn decode_condition_result(
-  data: Dynamic,
-) -> Result(ConditionResult, DecodeErrors) {
-  dynamic.decode2(
-    ConditionResult,
-    dynamic.field("condition", dynamic.string),
-    dynamic.field("success", dynamic.bool),
-  )(data)
+fn condition_results_decoder() -> Decoder(ConditionResult) {
+  use condition <- decode.field("condition", decode.string)
+  use success <- decode.field("success", decode.bool)
+  decode.success(ConditionResult(condition:, success:))
 }
 
-fn decode_status_event(data: Dynamic) -> Result(StatusEvent, DecodeErrors) {
-  dynamic.decode2(
-    StatusEvent,
-    dynamic.field("type", decode_status_event_type),
-    dynamic.field("timestamp", dynamic.string),
-  )(data)
+fn status_events_decoder() -> Decoder(StatusEvent) {
+  use type_ <- decode.field("type", status_event_type_decoder())
+  use timestamp <- decode.field("timestamp", decode.string)
+  decode.success(StatusEvent(type_:, timestamp:))
 }
 
-fn decode_status_event_type(
-  data: Dynamic,
-) -> Result(StatusEventType, DecodeErrors) {
-  use event <- result.try(dynamic.string(data))
-  case event {
-    "START" -> Ok(Start)
-    "HEALTHY" -> Ok(Healthly)
-    "UNHEALTHY" -> Ok(Unhealthly)
-    _ ->
-      Error([
-        dynamic.DecodeError(
-          expected: "Status event type",
-          found: "String",
-          path: [],
-        ),
-      ])
-  }
-}
-
-fn optional_field_of_list(
-  field: String,
-  decoder: Decoder(a),
-) -> Decoder(List(a)) {
-  let field_decoder = dynamic.optional_field(field, dynamic.list(decoder))
-  fn(data) {
-    field_decoder(data)
-    |> result.map(option.unwrap(_, []))
-  }
+fn status_event_type_decoder() -> Decoder(StatusEventType) {
+  decode.string
+  |> decode.then(fn(event) {
+    case event {
+      "START" -> decode.success(Start)
+      "HEALTHY" -> decode.success(Healthly)
+      "UNHEALTHY" -> decode.success(Unhealthly)
+      _ -> decode.failure(Start, "StatusEventType")
+    }
+  })
 }

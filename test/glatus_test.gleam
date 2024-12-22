@@ -1,9 +1,9 @@
-import simplifile
 import glatus.{ConditionResult, Endpoint, StatusResult}
-import gleeunit
-import gleam/json
 import gleam/httpc
+import gleam/json
+import gleeunit
 import gleeunit/should
+import simplifile
 
 pub fn main() {
   gleeunit.main()
@@ -27,7 +27,7 @@ pub fn gleam_website_endpoint_test() {
 
 pub fn decode_endpoints_test() {
   let assert Ok(json) = simplifile.read("test/statuses.json")
-  let assert Ok(data) = json.decode(json, glatus.decode_endpoints)
+  let assert Ok(data) = json.parse(json, glatus.endpoints_decoder())
   data
   |> should.equal([
     Endpoint(
